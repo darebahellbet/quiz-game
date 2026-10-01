@@ -1,0 +1,619 @@
+# quiz-game
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>لعبة الأسئلة</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .quiz {
+            max-width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 32px;
+        }
+
+        p {
+            font-size: 19px;
+            color: #555;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            border: none;
+            border-radius: 12px;
+            background: #eeeeee;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #dddddd;
+        }
+
+        .start-button {
+            background: #222;
+            color: white;
+            font-size: 21px;
+            margin-top: 25px;
+        }
+
+        #game {
+            display: none;
+        }
+
+        #question {
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        #result {
+            font-size: 20px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        #score {
+            color: #555;
+            margin-top: 15px;
+        }
+
+        #level {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #timer {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 15px;
+        }
+
+        #next {
+            background: #222;
+            color: white;
+            margin-top: 20px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="quiz">
+
+
+    <!-- ========================= -->
+    <!-- صفحة البداية -->
+    <!-- ========================= -->
+
+    <div id="start">
+
+        <h1>🎯 لعبة الأسئلة</h1>
+
+        <p>
+            اختبر معلوماتك وانتقل إلى مستويات أصعب!
+        </p>
+
+        <button class="start-button"
+                onclick="startGame()">
+
+            🚀 ابدأ اللعبة
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- اللعبة -->
+    <!-- ========================= -->
+
+    <div id="game">
+
+        <div id="level">
+            المستوى 1
+        </div>
+
+        <div id="timer">
+            ⏱️ 30
+        </div>
+
+        <div id="question"></div>
+
+        <div id="answers"></div>
+
+        <div id="result"></div>
+
+        <div id="score">
+            النقاط: 0
+        </div>
+
+        <button id="next"
+                onclick="nextQuestion()">
+
+            السؤال التالي
+
+        </button>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+/* ================================================= */
+/*                                                     */
+/*                 أسئلة المستوى الأول                 */
+/*                                                     */
+/* ================================================= */
+
+const level1 = [
+
+    {
+        question: "كم عدد سور القرآن الكريم؟",
+        answers: ["١١٢", "١١٣", "١١٤"],
+        correct: 2
+    },
+
+    {
+        question: "ما هي أطول سورة في القرآن الكريم؟",
+        answers: ["سورة البقرة", "سورة إبراهيم", "سورة يوسف"],
+        correct: 0
+    },
+
+    {
+        question: "ما هي أقصر سورة في القرآن الكريم؟",
+        answers: ["سورة الكوثر", "سورة الإخلاص", "سورة الناس"],
+        correct: 0
+    },
+
+    /* أضف السؤال الرابع هنا */
+
+    {
+        question: "ما هي السورة التي تُسمى قلب القرآن؟ .",
+        answers: [" سورة الفاتحة", "سورة يس", " سورة مريم"],
+        correct: 1
+    },
+
+    /* السؤال الخامس */
+
+    {
+        question: "من هو النبي الذي صنع السفينة؟   ",
+        answers: [" النبي موسى", " النبي محمد ", " النبي نوح"],
+        correct: 2
+    },
+
+    /* السؤال السادس */
+
+    {
+        question: "من هو أول الانبياء   ",
+        answers: [" ادم", " نوح", " عيسى"],
+        correct: 0
+    },
+
+    /* السؤال السابع */
+
+    {
+        question: "أضف سؤالك السابع هنا",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 2
+    },
+
+    /* السؤال الثامن */
+
+    {
+        question: "أضف سؤالك الثامن هنا",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    },
+
+    /* السؤال التاسع */
+
+    {
+        question: "أضف سؤالك التاسع هنا",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    },
+
+    /* السؤال العاشر */
+
+    {
+        question: "أضف سؤالك العاشر هنا",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    }
+
+];
+
+
+
+/* ================================================= */
+/*                                                     */
+/*                 أسئلة المستوى الثاني               */
+/*                                                     */
+/* ================================================= */
+
+const level2 = [
+
+    {
+        question: "سؤال أصعب رقم 1",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    },
+
+    {
+        question: "سؤال أصعب رقم 2",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    },
+
+    {
+        question: "سؤال أصعب رقم 3",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    },
+
+    {
+        question: "سؤال أصعب رقم 4",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    },
+
+    {
+        question: "سؤال أصعب رقم 5",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    },
+
+    {
+        question: "سؤال أصعب رقم 6",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    },
+
+    {
+        question: "سؤال أصعب رقم 7",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    },
+
+    {
+        question: "سؤال أصعب رقم 8",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    },
+
+    {
+        question: "سؤال أصعب رقم 9",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    },
+
+    {
+        question: "سؤال أصعب رقم 10",
+        answers: ["الإجابة 1", "الإجابة 2", "الإجابة 3"],
+        correct: 0
+    }
+
+];
+
+
+
+/* ================================================= */
+/*                 إعدادات اللعبة                     */
+/* ================================================= */
+
+let currentLevel = 1;
+
+let questions = level1;
+
+let currentQuestion = 0;
+
+let score = 0;
+
+let answered = false;
+
+let timeLeft = 30;
+
+let timer;
+
+
+
+/* ================================================= */
+/*                 بدء اللعبة                         */
+/* ================================================= */
+
+function startGame() {
+
+    document.getElementById("start").style.display =
+        "none";
+
+    document.getElementById("game").style.display =
+        "block";
+
+    startTimer();
+
+    showQuestion();
+
+}
+
+
+
+/* ================================================= */
+/*                 المؤقت                             */
+/* ================================================= */
+
+function startTimer() {
+
+    clearInterval(timer);
+
+    timeLeft = 30;
+
+    document.getElementById("timer").textContent =
+        "⏱️ " + timeLeft;
+
+    timer = setInterval(function() {
+
+        timeLeft--;
+
+        document.getElementById("timer").textContent =
+            "⏱️ " + timeLeft;
+
+        if (timeLeft <= 0) {
+
+            clearInterval(timer);
+
+            timeUp();
+
+        }
+
+    }, 1000);
+
+}
+
+
+
+/* ================================================= */
+/*                 انتهاء الوقت                       */
+/* ================================================= */
+
+function timeUp() {
+
+    answered = true;
+
+    document.getElementById("result").textContent =
+        "⏰ انتهى الوقت!";
+
+    document.getElementById("answers").innerHTML =
+        "";
+
+}
+
+
+
+/* ================================================= */
+/*                 عرض السؤال                        */
+/* ================================================= */
+
+function showQuestion() {
+
+    answered = false;
+
+    const q = questions[currentQuestion];
+
+    document.getElementById("question").textContent =
+        q.question;
+
+    const answersDiv =
+        document.getElementById("answers");
+
+    answersDiv.innerHTML = "";
+
+    document.getElementById("result").textContent =
+        "";
+
+    q.answers.forEach(function(answer, index) {
+
+        const button =
+            document.createElement("button");
+
+        button.textContent = answer;
+
+        button.onclick = function() {
+
+            checkAnswer(index);
+
+        };
+
+        answersDiv.appendChild(button);
+
+    });
+
+}
+
+
+
+/* ================================================= */
+/*                 التحقق من الإجابة                  */
+/* ================================================= */
+
+function checkAnswer(index) {
+
+    if (answered) return;
+
+    answered = true;
+
+    const q = questions[currentQuestion];
+
+    if (index === q.correct) {
+
+        document.getElementById("result").textContent =
+            "✅ إجابة صحيحة!";
+
+        score++;
+
+    } else {
+
+        document.getElementById("result").textContent =
+            "❌ إجابة خاطئة!";
+
+    }
+
+    document.getElementById("score").textContent =
+        "النقاط: " + score;
+
+}
+
+
+
+/* ================================================= */
+/*                 السؤال التالي                      */
+/* ================================================= */
+
+function nextQuestion() {
+
+    if (!answered) {
+
+        return;
+
+    }
+
+    currentQuestion++;
+
+    if (currentQuestion >= questions.length) {
+
+        finishLevel();
+
+        return;
+
+    }
+
+    showQuestion();
+
+}
+
+
+
+/* ================================================= */
+/*                 نهاية المستوى                     */
+/* ================================================= */
+
+function finishLevel() {
+
+    clearInterval(timer);
+
+    document.getElementById("answers").innerHTML =
+        "";
+
+    document.getElementById("question").textContent =
+        "🎉 انتهى المستوى!";
+
+    document.getElementById("result").textContent =
+        "نتيجتك: " + score +
+        " من " + questions.length;
+
+
+    if (currentLevel === 1) {
+
+        document.getElementById("next").textContent =
+            "➡️ الانتقال إلى المستوى 2";
+
+        document.getElementById("next").onclick =
+            function() {
+
+                startLevel2();
+
+            };
+
+    } else {
+
+        document.getElementById("next").textContent =
+            "🔄 إعادة اللعبة";
+
+        document.getElementById("next").onclick =
+            function() {
+
+                location.reload();
+
+            };
+
+    }
+
+}
+
+
+
+/* ================================================= */
+/*                 المستوى الثاني                     */
+/* ================================================= */
+
+function startLevel2() {
+
+    currentLevel = 2;
+
+    questions = level2;
+
+    currentQuestion = 0;
+
+    score = 0;
+
+    document.getElementById("level").textContent =
+        "المستوى 2 🔥";
+
+    document.getElementById("score").textContent =
+        "النقاط: 0";
+
+    document.getElementById("next").textContent =
+        "السؤال التالي";
+
+    document.getElementById("next").onclick =
+        function() {
+
+            nextQuestion();
+
+        };
+
+    startTimer();
+
+    showQuestion();
+
+}
+
+
+</script>
+
+</body>
+
+</html>
